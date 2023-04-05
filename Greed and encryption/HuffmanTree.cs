@@ -13,8 +13,12 @@ namespace Greed_and_encryption
 	{
 		private HuffmanNode root;
 
+
+		//It uses a dictionary to keep track of the frequency of each character and a MinHeap to build the Huffman tree.
 		public HuffmanTree(string text)
 		{
+
+			// Create a frequency table to keep track of the number of occurrences of each character in the input 
 			Dictionary<char, int> frequencyTable = new Dictionary<char, int>();
 
 			foreach (char symbol in text)
@@ -32,37 +36,47 @@ namespace Greed_and_encryption
 
 			foreach (KeyValuePair<char, int> entry in frequencyTable)
 			{
+				// Create a new HuffmanNode for the character-frequency pair and add it to the MinHeap
 				heap.Add(new HuffmanNode(entry.Key, entry.Value));
 			}
 
-			while (heap.Count > 1)
+			// Build the Huffman tree by removing the two lowest-frequency nodes from the MinHeap and combining them into a new node
+			while (heap.Count > 1)	
 			{
 				HuffmanNode left = heap.Remove();
 				HuffmanNode right = heap.Remove();
 				heap.Add(new HuffmanNode(left, right));
 			}
 
+			// Set the root of the Huffman tree to be the remaining node in the MinHeap
 			root = heap.Remove();
 		}
 
+		
 		private Dictionary<char, string> BuildEncodingTable()
 		{
 			Dictionary<char, string> encodingTable = new Dictionary<char, string>();
+
+			// Call the recursive helper method to traverse the Huffman tree and assign binary encodings to each leaf node
 			BuildEncodingTable(root, "", encodingTable);
+
 			return encodingTable;
 		}
 
 		private void BuildEncodingTable(HuffmanNode node, string prefix, Dictionary<char, string> encodingTable)
 		{
+			
 			if (node == null)
 			{
 				return;
 			}
 
+			// If the node is a leaf node, add its binary encoding to the encoding table
 			if (node.IsLeaf())
 			{
 				encodingTable[node.Symbol] = prefix;
 			}
+			// Otherwise, recursively call the helper method on the left and right child nodes, appending '0' or '1' to the prefix as needed
 			else
 			{
 				BuildEncodingTable(node.LeftChild, prefix + "0", encodingTable);
@@ -73,10 +87,12 @@ namespace Greed_and_encryption
 
 		public string Encode(string text)
 		{
+			// Build encoding table from Huffman tree
 			Dictionary<char, string> encodingTable = BuildEncodingTable();
-
+			
 			string encodedText = "";
 
+			// Encode the input text using the encoding table
 			foreach (char symbol in text)
 			{
 				encodedText += encodingTable[symbol];
@@ -91,6 +107,7 @@ namespace Greed_and_encryption
 			string decodedText = "";
 			HuffmanNode current = root;
 
+			// Traverse the Huffman tree based on the bits in the encoded text
 			foreach (char bit in encodedText)
 			{
 				if (bit == '0')
@@ -102,6 +119,8 @@ namespace Greed_and_encryption
 					current = current.RightChild;
 				}
 
+				// If we've reached a leaf node, add the corresponding symbol to the decoded text
+				// and go back to the root of the tree
 				if (current.IsLeaf())
 				{
 					decodedText += current.Symbol;

@@ -15,12 +15,14 @@ namespace Greed_and_encryption
 		public HuffmanNode RightChild { get; set; }
 
 
+		// Constructor for a leaf node
 		public HuffmanNode(char symbol, int frequency)
 		{
 			Symbol = symbol;
 			Frequency = frequency;
 		}
 
+		// Constructor for a non-leaf node
 		public HuffmanNode(HuffmanNode left, HuffmanNode right)
 		{
 			Frequency = left.Frequency + right.Frequency;
@@ -29,11 +31,13 @@ namespace Greed_and_encryption
 		}
 
 
+		// Implementation of the IComparable interface. Compares nodes by frequency.
 		public int CompareTo(HuffmanNode other)
 		{
 			return this.Frequency - other.Frequency;
 		}
 
+		// Returns true if this node is a leaf node
 		public bool IsLeaf()
 		{
 			return (LeftChild == null && RightChild == null);
