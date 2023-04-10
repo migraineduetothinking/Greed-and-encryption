@@ -242,10 +242,10 @@ namespace Greed_and_encryption
 		{
 			using (var reader = new BinaryReader(new FileStream(inputFilePath, FileMode.Open)))
 			{
-				// зчитуємо довжину закодованого тексту, яку ми записали під час кодування
+				// read the length of the encoded text that we recorded during encoding
 				int encodedLength = reader.ReadInt32();
 
-				// зчитуємо закодований текст з бінарного файлу
+				// read the encoded text from the binary file
 				byte[] bytes = reader.ReadBytes((int)Math.Ceiling((double)encodedLength / 8));
 				string encoded = "";
 				for (int i = 0; i < bytes.Length; i++)
@@ -254,7 +254,7 @@ namespace Greed_and_encryption
 				}
 				encoded = encoded.Substring(0, encodedLength);
 
-				// розкодовуємо закодований текст
+
 				string decoded = Decode(encoded);
 
 				return decoded;
